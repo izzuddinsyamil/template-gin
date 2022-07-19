@@ -7,7 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type handler interface{}
+type handler interface {
+	HandleInsertBook(c *gin.Context)
+}
 
 func SetupRouter(r *gin.Engine, h handler) {
 	r.Use(requestid.New())
@@ -15,4 +17,6 @@ func SetupRouter(r *gin.Engine, h handler) {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, nil)
 	})
+
+	r.POST("/book", h.HandleInsertBook)
 }
