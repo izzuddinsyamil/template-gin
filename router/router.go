@@ -7,7 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(r *gin.Engine) {
+type handler interface{}
+
+func SetupRouter(r *gin.Engine, h handler) {
 	r.Use(requestid.New())
 
 	r.GET("/", func(c *gin.Context) {

@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"log"
 	"template-gin/config"
+	"template-gin/db"
+	"template-gin/handler"
+	"template-gin/repo"
 	"template-gin/router"
 	"template-gin/server"
+	"template-gin/usecase"
 )
 
 func main() {
@@ -16,10 +20,22 @@ func main() {
 
 	srv := server.NewServer()
 
-	router.SetupRouter(srv)
+	mongodb, err := db.ConnectMongo(
+		cfg.Mongo.URI,
+		cfg.Mongo.Database,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Printf("server running on port %v\n", cfg.Port)
-	if err := srv.Run(fmt.Sprintf(":%s", cfg.Port)); err != nil {
+	repo := repo.NewMongoRepo(mongodb)
+	uc := usecase.NewUsecase(repo)
+	handler := handler.NewHandler(uc)
+
+	router.SetupRouter(srv, handler)
+
+	fmt.Printf("server running on port %v\n", cfg.App.Port)
+	if err := srv.Run(fmt.Sprintf(":%s", cfg.App.Port)); err != nil {
 		log.Fatal(err)
 	}
 }
