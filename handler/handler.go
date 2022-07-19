@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"net/http"
 	"template-gin/model"
 
 	"github.com/gin-gonic/gin"
@@ -24,16 +23,16 @@ func NewHandler(uc usecase) *handler {
 
 func (h *handler) HandleInsertBook(c *gin.Context) {
 	req := model.Book{}
-	if err := c.BindJSON(&req); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+	if err := c.ShouldBind(&req); err != nil {
+		SendBadRequestResponse(c, "invalid request payload", nil)
 		return
 	}
 
 	err := h.uc.InsertBook(c.Request.Context(), req)
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		SendInternalErrorResponse(c, "internal server error", nil)
 		return
 	}
 
-	c.JSON(http.StatusAccepted, &req)
+	SendCreatedResponse(c, "book created", req)
 }
