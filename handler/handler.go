@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"log"
 	"template-gin/model"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +10,7 @@ import (
 
 type usecase interface {
 	InsertBook(ctx context.Context, b model.Book) error
+	GetBooks(ctx context.Context) (res []model.Book, err error)
 }
 
 type handler struct {
@@ -35,4 +37,15 @@ func (h *handler) HandleInsertBook(c *gin.Context) {
 	}
 
 	SendCreatedResponse(c, "book created", req)
+}
+
+func (h *handler) HandleGetBooks(c *gin.Context) {
+	books, err := h.uc.GetBooks(c.Request.Context())
+	if err != nil {
+		log.Printf("error while getting books: %v", err)
+		SendInternalErrorResponse(c, "internal server error", nil)
+		return
+	}
+
+	SendOkResponse(c, "ok", books)
 }
