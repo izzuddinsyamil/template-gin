@@ -6,19 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SendOkResponse(c *gin.Context, message string, data interface{}) {
+func sendOkResponse(c *gin.Context, message string, data interface{}) {
 	sendJsonResponse(c, http.StatusOK, message, data)
 }
 
-func SendCreatedResponse(c *gin.Context, message string, data interface{}) {
+func sendCreatedResponse(c *gin.Context, message string, data interface{}) {
 	sendJsonResponse(c, http.StatusCreated, message, data)
 }
 
-func SendInternalErrorResponse(c *gin.Context, message string, data interface{}) {
+func sendInternalErrorResponse(c *gin.Context, message string, data interface{}) {
 	sendJsonResponse(c, http.StatusInternalServerError, message, data)
 }
 
-func SendBadRequestResponse(c *gin.Context, message string, data interface{}) {
+func sendBadRequestResponse(c *gin.Context, message string, data interface{}) {
 	sendJsonResponse(c, http.StatusBadRequest, message, data)
 }
 

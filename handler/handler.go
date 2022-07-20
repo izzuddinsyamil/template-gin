@@ -26,26 +26,26 @@ func NewHandler(uc usecase) *handler {
 func (h *handler) HandleInsertBook(c *gin.Context) {
 	req := model.Book{}
 	if err := c.ShouldBind(&req); err != nil {
-		SendBadRequestResponse(c, "invalid request payload", nil)
+		sendBadRequestResponse(c, "invalid request payload", nil)
 		return
 	}
 
 	err := h.uc.InsertBook(c.Request.Context(), req)
 	if err != nil {
-		SendInternalErrorResponse(c, "internal server error", nil)
+		sendInternalErrorResponse(c, "internal server error", nil)
 		return
 	}
 
-	SendCreatedResponse(c, "book created", req)
+	sendCreatedResponse(c, "book created", req)
 }
 
 func (h *handler) HandleGetBooks(c *gin.Context) {
 	books, err := h.uc.GetBooks(c.Request.Context())
 	if err != nil {
 		log.Printf("error while getting books: %v", err)
-		SendInternalErrorResponse(c, "internal server error", nil)
+		sendInternalErrorResponse(c, "internal server error", nil)
 		return
 	}
 
-	SendOkResponse(c, "ok", books)
+	sendOkResponse(c, "ok", books)
 }
