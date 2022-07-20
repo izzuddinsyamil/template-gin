@@ -7,7 +7,7 @@ import (
 
 type repo interface {
 	InsertBook(ctx context.Context, b model.Book) error
-	GetBooks(ctx context.Context) (res []model.Book, err error)
+	GetBooks(ctx context.Context, title string) (res []model.Book, err error)
 }
 
 type usecase struct {

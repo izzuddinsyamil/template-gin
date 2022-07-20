@@ -27,8 +27,14 @@ func (r *mongoRepo) InsertBook(ctx context.Context, b model.Book) error {
 	return nil
 }
 
-func (r *mongoRepo) GetBooks(ctx context.Context) (res []model.Book, err error) {
-	cursor, err := r.db.Collection("books").Find(ctx, bson.M{})
+func (r *mongoRepo) GetBooks(ctx context.Context, title string) (res []model.Book, err error) {
+	filter := bson.M{}
+
+	if title != "" {
+		filter["title"] = title
+	}
+
+	cursor, err := r.db.Collection("books").Find(ctx, filter)
 	if err != nil {
 		return
 	}
