@@ -27,11 +27,23 @@ func (r *mongoRepo) InsertBook(ctx context.Context, b model.Book) error {
 	return nil
 }
 
-func (r *mongoRepo) GetBooks(ctx context.Context, title string) (res []model.Book, err error) {
+func (r *mongoRepo) GetBooks(ctx context.Context, title string, startYear, endYear int) (res []model.Book, err error) {
 	filter := bson.M{}
 
 	if title != "" {
 		filter["title"] = title
+	}
+
+	if startYear != 0 {
+		filter["release_year"] = bson.M{
+			"$gte": startYear,
+		}
+	}
+
+	if endYear != 0 {
+		filter["release_year"] = bson.M{
+			"$lt": endYear,
+		}
 	}
 
 	cursor, err := r.db.Collection("books").Find(ctx, filter)

@@ -10,7 +10,7 @@ import (
 
 type usecase interface {
 	InsertBook(ctx context.Context, b model.Book) error
-	GetBooks(ctx context.Context, title string) (res []model.Book, err error)
+	GetBooks(ctx context.Context, title string, startYear, endYear int) (res []model.Book, err error)
 }
 
 type handler struct {
@@ -50,7 +50,7 @@ func (h *handler) HandleGetBooks(c *gin.Context) {
 		return
 	}
 
-	books, err := h.uc.GetBooks(c.Request.Context(), req.Title)
+	books, err := h.uc.GetBooks(c.Request.Context(), req.Title, req.StartYear, req.EndYear)
 	if err != nil {
 		log.Printf("error while getting books: %v", err)
 		sendInternalErrorResponse(c, "internal server error", nil)

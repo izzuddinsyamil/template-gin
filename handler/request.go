@@ -6,5 +6,7 @@ type insertBookRequest struct {
 }
 
 type getBooksRequest struct {
-	Title string `form:"title"`
+	Title     string `form:"title"`
+	StartYear int    `form:"start_year"`
+	EndYear   int    `form:"end_year"`
 }
