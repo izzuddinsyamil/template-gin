@@ -24,13 +24,17 @@ func NewHandler(uc usecase) *handler {
 }
 
 func (h *handler) HandleInsertBook(c *gin.Context) {
-	req := model.Book{}
+	req := insertBookRequest{}
 	if err := c.ShouldBind(&req); err != nil {
+		log.Printf("error when binding request %v\n", err)
 		sendBadRequestResponse(c, "invalid request payload", nil)
 		return
 	}
 
-	err := h.uc.InsertBook(c.Request.Context(), req)
+	err := h.uc.InsertBook(c.Request.Context(), model.Book{
+		Title:       req.Title,
+		ReleaseYear: req.ReleaseYear,
+	})
 	if err != nil {
 		sendInternalErrorResponse(c, "internal server error", nil)
 		return
